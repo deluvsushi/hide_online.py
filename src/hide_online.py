@@ -6,8 +6,7 @@ from hashlib import md5
 class HideOnline:
 	def __init__(
 			self,
-			title_id: str = "4A02",
-			sdk: str = "UnitySDK-2.63.190312"):
+			sdk: str = "UnitySDK-2.63.190312") -> None:
 		self.api = "https://4a02.playfabapi.com/Client"
 		self.headers = {
 			"user-agent": "Dalvik/2.1.0 (Linux; U; Android 7.1.2; SM-G9880 Build/RP1A.2007201.012)",
@@ -17,10 +16,10 @@ class HideOnline:
 		}
 		self.sdk = sdk
 		self.user_id = None
-		self.title_id = title_id
+		self.title_id = "4A02"
 		self.session_ticket = None
 
-	def generate_device_id(self):
+	def generate_device_id(self) -> str:
 		return md5(urandom(15)).hexdigest()
 
 	def register(
@@ -50,7 +49,7 @@ class HideOnline:
 			show_statistics: bool = False,
 			show_tags: bool = True,
 			show_total_value_to_date_usd: bool = False,
-			show_values_to_date: bool = False):
+			show_values_to_date: bool = False) -> dict:
 		data = {
 			"AndroidDeviceId": self.generate_device_id(),
 			"CreateAccount": True,
@@ -91,12 +90,17 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def login_with_session_ticket(self, session_ticket: str):
+	def login_with_session_ticket(
+			self,
+			session_ticket: str) -> str:
 		self.session_ticket = session_ticket
 		self.headers["x-authorization"] = self.session_ticket
+		return self.session_ticket
 
-	def get_photon_token(self):
-		data = {"PhotonApplicationId": uuid4()}
+	def get_photon_token(self) -> dict:
+		data = {
+			"PhotonApplicationId": uuid4()
+		}
 		return requests.post(
 			f"{self.api}/GetPhotonAuthenticationToken?sdk={self.sdk}",
 			json=data,
@@ -104,14 +108,16 @@ class HideOnline:
 
 	def get_title_data(
 			self,
-			keys: list = ["actualVersionAndroid", "gameConfigAndroid.v491"]):
-		data = {"Keys": keys}
+			keys: list = ["actualVersionAndroid", "gameConfigAndroid.v491"]) -> dict:
+		data = {
+			"Keys": keys
+		}
 		return requests.post(
 			f"{self.api}/GetTitleData?sdk={self.sdk}",
 			json=data,
 			headers=self.headers).json()
 
-	def get_server_time(self):
+	def get_server_time(self) -> dict:
 		return requests.post(
 			f"{self.api}/GetTime?sdk={self.sdk}",
 			headers=self.headers).json()
@@ -119,7 +125,7 @@ class HideOnline:
 	def get_store_items(
 			self,
 			catalog_version: str = "Virtual",
-			store_id: str = "General"):
+			store_id: str = "General") -> dict:
 		data = {
 			"CatalogVersion": catalog_version,
 			"StoreId": store_id
@@ -129,7 +135,7 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def get_account_info(self):
+	def get_account_info(self) -> dict:
 		data = {
 			"FunctionName": "getPlayer",
 			"RevisionSelection": "Live",
@@ -140,7 +146,7 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def get_video_ad_reward(self):
+	def get_video_ad_reward(self) -> dict:
 		data = {
 			"FunctionName": "giveVideoAdReward",
 			"RevisionSelection": "Live",
@@ -151,7 +157,7 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def activate_gift_offer(self, gift_name: str):
+	def activate_gift_offer(self, gift_name: str) -> dict:
 		data = {
 			"FunctionName": "activateGiftOffer",
 			"FunctionParameter": {
@@ -165,7 +171,7 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def check_if_has_gift(self, gift_name: str):
+	def check_if_has_gift(self, gift_name: str) -> dict:
 		data = {
 			"FunctionName": "checkIfHasGift",
 			"FunctionParameter": {
@@ -179,7 +185,7 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def open_gift_loot_box(self, gift_name: str):
+	def open_gift_loot_box(self, gift_name: str) -> dict:
 		data = {
 			"FunctionName": "openGiftLootBox",
 			"FunctionParameter": {
@@ -193,7 +199,7 @@ class HideOnline:
 			json=data,
 			headers=self.headers).json()
 
-	def set_nickname(self, nickname: str):
+	def set_nickname(self, nickname: str) -> dict:
 		data = {
 			"FunctionName": "setNickname",
 			"FunctionParameter": {
@@ -213,7 +219,7 @@ class HideOnline:
 			weapon: str = "w_rifle3b",
 			pose: str = "p_1",
 			avatar: str = "a_96",
-			emoji: str = "e_0"):
+			emoji: str = "e_0") -> dict:
 		data = {
 			"FunctionName": "equipItems",
 			"FunctionParameter": {
